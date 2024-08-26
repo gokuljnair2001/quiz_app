@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quiz_app/dummydb/dummydb.dart';
 import 'package:quiz_app/view/home_screen/widgets/option_card.dart';
+import 'package:quiz_app/view/result_screen/result_screen.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +15,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int? selectedAnswerIndex;
   int questionIndex = 0;
+  int rightAnswerCount = 0;
+  int wrongAnswerCount = 0;
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black,
         actions: [
           Text(
-            '1/10',
+            '${questionIndex + 1} / ${Dummydb.quesList.length}',
             style: TextStyle(color: Colors.blue),
           )
         ],
@@ -32,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
+            
             Expanded(
               child: buildQuestion(),
             ),
@@ -49,8 +57,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       onOptionTap: () {
                         if (selectedAnswerIndex == null) {
                           selectedAnswerIndex = index;
+                          if (index ==
+                              Dummydb.quesList[questionIndex]['answer']) {
+                            rightAnswerCount++;
+                            print('Right answer count : ${rightAnswerCount}');
+                          }
+
                           print(index);
-                          setState(() {});
+                          setState(() {
+                            if (selectedAnswerIndex ==
+                                Dummydb.quesList[questionIndex]['answer']) {
+                              rightAnswerCount++;
+                            } else {
+                              wrongAnswerCount++;
+                            }
+                          });
                         }
                       },
                       questionIndex: questionIndex,
@@ -70,16 +91,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             questionIndex++;
                           });
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                              'Thanks',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  fontSize: 25),
-                            ),
-                            backgroundColor: Colors.red,
-                          ));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultScreen(
+                                  rightAnswerCount: rightAnswerCount,
+                                  wrongAnswerCount: wrongAnswerCount,
+                                ),
+                              ));
                         }
                       },
                       child: Container(
@@ -106,22 +125,31 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container buildQuestion() {
-    return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(.5),
-          borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: SingleChildScrollView(
-          child: Text(
-            Dummydb.quesList[questionIndex]['question'],
-            style: TextStyle(
-                fontSize: 23, color: Colors.white, fontWeight: FontWeight.w500),
+  Expanded buildQuestion() {
+    return Expanded(
+      child: Stack(
+        children: [
+          Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(.5),
+                borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                Dummydb.quesList[questionIndex]['question'],
+                style: TextStyle(
+                    fontSize: 23,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
           ),
-        ),
+          selectedAnswerIndex == Dummydb.quesList[questionIndex]['answer']
+              ? LottieBuilder.asset('assets/lotties/lottie1.json')
+              : SizedBox()
+        ],
       ),
     );
   }

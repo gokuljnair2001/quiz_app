@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:quiz_app/view/home_screen/category_screen/category_screen.dart';
 import 'package:quiz_app/view/home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,13 +20,25 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreen(),
+              builder: (context) => CategoryScreen(),
             ));
       },
     );
   }
 
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Text(
+          'Quiz App',
+          style: GoogleFonts.yaldevi(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  fontSize: 30)),
+        ),
+      ),
+    );
   }
 }
