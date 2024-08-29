@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/dummydb/dummydb.dart';
 import 'package:quiz_app/view/home_screen/home_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({
     super.key,
     required this.rightAnswerCount,
-    required this.wrongAnswerCount,
+    required this.wrongAnswerCount, required this.currentQuestions,
   });
 
   final int rightAnswerCount;
   final int wrongAnswerCount;
+  final List currentQuestions;
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -58,7 +58,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
           ),
           Text(
-            '${widget.rightAnswerCount} / ${Dummydb.quesList.length}',
+            '${widget.rightAnswerCount} / ${widget.currentQuestions.length}',
             style: TextStyle(fontSize: 30, color: Colors.green),
           ),
           SizedBox(
@@ -92,7 +92,9 @@ class _ResultScreenState extends State<ResultScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
+                        builder: (context) => HomeScreen(
+                          quesList: widget.currentQuestions,
+                        ),
                       ));
                 },
                 child: Text(
@@ -112,7 +114,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   calPercentage() {
     double percentage =
-        (widget.rightAnswerCount / Dummydb.quesList.length) * 100;
+        (widget.rightAnswerCount / widget.currentQuestions.length) * 100;
     print(percentage);
   }
 }

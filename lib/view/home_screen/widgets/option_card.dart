@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/dummydb/dummydb.dart';
 
 class OptionsCard extends StatelessWidget {
   const OptionsCard({
@@ -7,10 +6,11 @@ class OptionsCard extends StatelessWidget {
     required this.questionIndex,
     required int this.optionIndex,
     this.onOptionTap,
-    required this.borderColor,
+    required this.borderColor, required this.option,
   });
 
   final int questionIndex;
+  final String option;
   final int optionIndex;
   final void Function()? onOptionTap;
   final Color borderColor;
@@ -31,7 +31,7 @@ class OptionsCard extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                Dummydb.quesList[questionIndex]['options'][optionIndex],
+                option,
                 style: TextStyle(color: Colors.white, fontSize: 22),
               ),
               Spacer(),

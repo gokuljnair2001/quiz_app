@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:quiz_app/dummydb/dummydb.dart';
+import 'package:quiz_app/view/category_screen/widgets/categorycard.dart';
 import 'package:quiz_app/view/home_screen/home_screen.dart';
 import 'package:quiz_app/view/image_constant/imageconstant.dart';
 
@@ -142,34 +143,18 @@ class CategoryScreen extends StatelessWidget {
               scrollDirection: Axis.vertical,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   mainAxisSpacing: 10, crossAxisSpacing: 10, crossAxisCount: 2),
-              itemBuilder: (context, index) => InkWell(
-                onTap: () {
+              itemBuilder: (context, index) => categoryCard(
+                image: Dummydb.CategoryList[index]['image'],
+                title: Dummydb.CategoryList[index]['category'],
+                onGridTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
+                        builder: (context) => HomeScreen(
+                          quesList: Dummydb.CategoryList[index]['list'],
+                        ),
                       ));
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        Dummydb.CategoryList[index]['image'],
-                        height: 120,
-                        width: 100,
-                      ),
-                      Text(Dummydb.CategoryList[index]['category'],
-                          style: GoogleFonts.abhayaLibre(
-                              textStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 30))),
-                    ],
-                  ),
-                ),
               ),
             ))
           ],

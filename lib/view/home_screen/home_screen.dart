@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:quiz_app/dummydb/dummydb.dart';
 import 'package:quiz_app/view/home_screen/widgets/option_card.dart';
 import 'package:quiz_app/view/result_screen/result_screen.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.quesList});
+
+  final List quesList;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,8 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int questionIndex = 0;
   int rightAnswerCount = 0;
   int wrongAnswerCount = 0;
-  
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black,
         actions: [
           Text(
-            '${questionIndex + 1} / ${Dummydb.quesList.length}',
+            '${questionIndex + 1} / ${widget.quesList.length}',
             style: TextStyle(color: Colors.blue),
           )
         ],
@@ -39,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
-            
             Expanded(
               child: buildQuestion(),
             ),
@@ -54,24 +52,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: OptionsCard(
                       borderColor: _getcolor(index),
+                      option: widget.quesList[questionIndex]['options'][index],
                       onOptionTap: () {
                         if (selectedAnswerIndex == null) {
                           selectedAnswerIndex = index;
                           if (index ==
-                              Dummydb.quesList[questionIndex]['answer']) {
+                              widget.quesList[questionIndex]['answer']) {
                             rightAnswerCount++;
-                            print('Right answer count : ${rightAnswerCount}');
+                          } else {
+                            wrongAnswerCount++;
                           }
-
-                          print(index);
-                          setState(() {
-                            if (selectedAnswerIndex ==
-                                Dummydb.quesList[questionIndex]['answer']) {
-                              rightAnswerCount++;
-                            } else {
-                              wrongAnswerCount++;
-                            }
-                          });
+                          setState(() {});
                         }
                       },
                       questionIndex: questionIndex,
@@ -86,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : InkWell(
                       onTap: () {
                         selectedAnswerIndex = null;
-                        if (questionIndex < Dummydb.quesList.length - 1) {
+                        if (questionIndex < widget.quesList.length - 1) {
                           setState(() {
                             questionIndex++;
                           });
@@ -95,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ResultScreen(
+                                  currentQuestions: widget.quesList,
                                   rightAnswerCount: rightAnswerCount,
                                   wrongAnswerCount: wrongAnswerCount,
                                 ),
@@ -138,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                Dummydb.quesList[questionIndex]['question'],
+                widget.quesList[questionIndex]['question'],
                 style: TextStyle(
                     fontSize: 23,
                     color: Colors.white,
@@ -146,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          selectedAnswerIndex == Dummydb.quesList[questionIndex]['answer']
+          selectedAnswerIndex == widget.quesList[questionIndex]['answer']
               ? LottieBuilder.asset('assets/lotties/lottie1.json')
               : SizedBox()
         ],
@@ -156,14 +148,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Color _getcolor(int index) {
     if (selectedAnswerIndex != null) {
-      if (index == Dummydb.quesList[questionIndex]['answer']) {
+      if (index == widget.quesList[questionIndex]['answer']) {
         return Colors.green;
       }
-      if (selectedAnswerIndex == Dummydb.quesList[questionIndex]['answer'] &&
+      if (selectedAnswerIndex == widget.quesList[questionIndex]['answer'] &&
           selectedAnswerIndex == index) {
         return Colors.green;
       } else if (selectedAnswerIndex !=
-              Dummydb.quesList[questionIndex]['answer'] &&
+              widget.quesList[questionIndex]['answer'] &&
           selectedAnswerIndex == index) {
         return Colors.red;
       }

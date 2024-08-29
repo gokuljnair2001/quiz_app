@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quiz_app/view/home_screen/category_screen/category_screen.dart';
+import 'package:quiz_app/view/category_screen/category_screen.dart';
 import 'package:quiz_app/view/home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
