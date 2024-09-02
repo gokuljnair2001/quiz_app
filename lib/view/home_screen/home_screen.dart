@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quiz_app/view/home_screen/widgets/option_card.dart';
 import 'package:quiz_app/view/result_screen/result_screen.dart';
@@ -44,32 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 25,
             ),
-            Column(
-                children: List.generate(
-              4,
-              (index) {
-                return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OptionsCard(
-                      borderColor: _getcolor(index),
-                      option: widget.quesList[questionIndex]['options'][index],
-                      onOptionTap: () {
-                        if (selectedAnswerIndex == null) {
-                          selectedAnswerIndex = index;
-                          if (index ==
-                              widget.quesList[questionIndex]['answer']) {
-                            rightAnswerCount++;
-                          } else {
-                            wrongAnswerCount++;
-                          }
-                          setState(() {});
-                        }
-                      },
-                      questionIndex: questionIndex,
-                      optionIndex: index,
-                    ));
-              },
-            )),
+            _buildOptionSection(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
               child: selectedAnswerIndex == null
@@ -117,32 +93,74 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Expanded buildQuestion() {
-    return Expanded(
-      child: Stack(
-        children: [
-          Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(.5),
-                borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.quesList[questionIndex]['question'],
-                style: TextStyle(
-                    fontSize: 23,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500),
+  Column _buildOptionSection() {
+    return Column(
+              children: List.generate(
+            4,
+            (index) {
+              return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OptionsCard(
+                    borderColor: _getcolor(index),
+                    option: widget.quesList[questionIndex]['options'][index],
+                    onOptionTap: () {
+                      if (selectedAnswerIndex == null) {
+                        selectedAnswerIndex = index;
+                        if (index ==
+                            widget.quesList[questionIndex]['answer']) {
+                          rightAnswerCount++;
+                        } else {
+                          wrongAnswerCount++;
+                        }
+                        setState(() {});
+                      }
+                    },
+                    questionIndex: questionIndex,
+                    optionIndex: index,
+                  ));
+            },
+          ));
+  }
+
+  Widget buildQuestion() {
+    return Column(
+      children: [
+        LinearProgressIndicator(
+          color: Colors.green,
+          minHeight: 10,
+          borderRadius: BorderRadius.circular(12),
+          value: (questionIndex + 1) / widget.quesList.length,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(.5),
+                    borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.quesList[questionIndex]['question'],
+                    style: TextStyle(
+                        fontSize: 23,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
               ),
-            ),
+              selectedAnswerIndex == widget.quesList[questionIndex]['answer']
+                  ? LottieBuilder.asset('assets/lotties/lottie1.json')
+                  : SizedBox()
+            ],
           ),
-          selectedAnswerIndex == widget.quesList[questionIndex]['answer']
-              ? LottieBuilder.asset('assets/lotties/lottie1.json')
-              : SizedBox()
-        ],
-      ),
+        ),
+      ],
     );
   }
 

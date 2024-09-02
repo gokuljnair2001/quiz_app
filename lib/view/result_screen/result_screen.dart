@@ -5,7 +5,8 @@ class ResultScreen extends StatefulWidget {
   const ResultScreen({
     super.key,
     required this.rightAnswerCount,
-    required this.wrongAnswerCount, required this.currentQuestions,
+    required this.wrongAnswerCount,
+    required this.currentQuestions,
   });
 
   final int rightAnswerCount;
@@ -112,9 +113,17 @@ class _ResultScreenState extends State<ResultScreen> {
     );
   }
 
-  calPercentage() {
+  int calPercentage() {
     double percentage =
         (widget.rightAnswerCount / widget.currentQuestions.length) * 100;
-    print(percentage);
+    if (percentage >= 80) {
+      return 3;
+    } else if (percentage >= 50) {
+      return 2;
+    } else if (percentage >= 30) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }
